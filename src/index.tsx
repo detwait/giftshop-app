@@ -3,13 +3,71 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, Link, redirect, RouterProvider } from 'react-router-dom';
+import UserLoginGoogle from './user/components/UserLoginGoogle/UserLoginGoogle';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import userAuthService from "./user/services/user-auth.service";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <div>
+        <h1>Hello World</h1>
+        <Link to="about">About Us</Link>
+      </div>
+    ),
+    loader: async () => {
+      const isLoggedIn: boolean = await userAuthService.isLoggedIn();
+      const isFullProfile: boolean = await userAuthService.isFullProfile();
+
+      if (!isLoggedIn) {
+        throw redirect("/login");
+      }
+
+      if (!isFullProfile) {
+        throw redirect("/set-birthday");
+      }
+
+      return null;
+    },
+  },
+  {
+    path: "/set-birthday",
+    element: (
+      <div>
+        <h1>Hello World</h1>
+        <Link to="about">About Us</Link>
+      </div>
+    ),
+    loader: async () => {
+      const isLoggedIn: boolean = await userAuthService.isLoggedIn();
+
+      if (!isLoggedIn) {
+        throw redirect("/login");
+      }
+      
+      return null;
+    },
+  },
+  {
+    path: "login",
+    element: (
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}>
+        <UserLoginGoogle />
+      </GoogleOAuthProvider>
+    ),
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <App>
+      <RouterProvider router={router} />
+    </App>
   </React.StrictMode>
 );
 
