@@ -28,13 +28,13 @@ instance.interceptors.response.use(
   async (err) => {
     const originalConfig = err.config;
 
-    if (originalConfig.url !== "/auth/signin" && err.response) {
+    if (originalConfig.url !== "/api-user-auth-google" && err.response) {
       // Access Token was expired
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
 
         try {
-          const rs = await instance.post("/auth/refreshtoken", {
+          const rs = await instance.post("/api-user-auth/refresh", {
             refreshToken: TokenService.getRefreshToken(),
           });
 

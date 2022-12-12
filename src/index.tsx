@@ -3,20 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, Link, redirect, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom';
 import UserLoginGoogle from './user/components/UserLoginGoogle/UserLoginGoogle';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import userAuthService from "./user/services/user-auth.service";
+import UserSetBirthday from './user/components/UserSetBiithday/UserSetBiithday';
+import UserList from './user/components/UserList/UserList';
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: (
-      <div>
-        <h1>Hello World</h1>
-        <Link to="about">About Us</Link>
-      </div>
-    ),
+    path: "/list",
+    element: (<UserList/>),
     loader: async () => {
       const isLoggedIn: boolean = await userAuthService.isLoggedIn();
       const isFullProfile: boolean = await userAuthService.isFullProfile();
@@ -34,12 +31,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/set-birthday",
-    element: (
-      <div>
-        <h1>Hello World</h1>
-        <Link to="about">About Us</Link>
-      </div>
-    ),
+    element: (<UserSetBirthday/>),
     loader: async () => {
       const isLoggedIn: boolean = await userAuthService.isLoggedIn();
 
@@ -51,7 +43,7 @@ const router = createBrowserRouter([
     },
   },
   {
-    path: "login",
+    path: "/",
     element: (
       <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}>
         <UserLoginGoogle />

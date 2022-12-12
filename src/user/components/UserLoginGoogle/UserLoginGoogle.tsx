@@ -1,11 +1,14 @@
 import { useGoogleLogin } from "@react-oauth/google";
-
+import { useNavigate } from 'react-router-dom';
 import UserLoginGoogleService from "../../services/user-auth-google.service";
 
-function UserLoginGoogle() {
+export default function UserLoginGoogle() {
+  const navigate = useNavigate();
+
   const login = useGoogleLogin({
-    onSuccess: ({ access_token }) => {
-      UserLoginGoogleService.signIn(access_token);
+    onSuccess: async ({ access_token }) => {
+      await UserLoginGoogleService.signIn(access_token);
+      navigate('/list');
     },
   });
 
@@ -15,5 +18,3 @@ function UserLoginGoogle() {
     </button>
   );
 }
-
-export default UserLoginGoogle;
